@@ -22,13 +22,6 @@ class System {
  private:
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
-  //std::string kernel_string = "4.15.0-106-generic";
-  //std::string operatingsystem_string = "Ubuntu 16.04.6 LTS";
-
-  //float MemTotal = 16330784.0;
-  //float MemFree = 12014080.0;
-  //int totalprocesses_ = 8522;
-  int runningprocesses_ = 1;
 };
 
 #endif

@@ -10,6 +10,7 @@ int main() {
   std::cout << system.Kernel() << std::endl;
   std::cout << system.MemoryUtilization() << std::endl;
   std::cout << system.TotalProcesses() << std::endl;
+  std::cout << system.RunningProcesses() << std::endl;
   
   
   //ORIGINAL: NCursesDisplay::Display(system);
