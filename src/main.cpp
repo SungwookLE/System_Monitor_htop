@@ -11,6 +11,8 @@ int main() {
   std::cout << system.MemoryUtilization() << std::endl;
   std::cout << system.TotalProcesses() << std::endl;
   std::cout << system.RunningProcesses() << std::endl;
+  std::cout << system.UpTime() << std::endl;
+  
   
   
   //ORIGINAL: NCursesDisplay::Display(system);
