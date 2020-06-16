@@ -4,7 +4,7 @@
 #include <sstream>
 
 
-// NOT COMPLETED(6/15) => TODO: Return the aggregate CPU utilization
+// NOT COMPLETED(6/16) ??=> TODO: Return the aggregate CPU utilization
 // GO TO JIFFIES AND ACTIVEJIFFIES, IDLEJIFFIES
 float Processor::Utilization() { 
     float totalTime = LinuxParser::Jiffies();
@@ -13,7 +13,7 @@ float Processor::Utilization() {
     return result;
 }
 
-/* 메모(6/15): 아니 이렇게 계산하라는게 stack overflow에 써있는 내용인데,, 왜 uda community랑 답변이 다른 것 같지?
+/* 메모(6/16): 아니 이렇게 계산하라는게 stack overflow에 써있는 내용인데,, 왜 uda community랑 답변이 다른 것 같지?
 1. https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
 2. https://knowledge.udacity.com/questions/156400
 
