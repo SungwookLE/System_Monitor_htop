@@ -7,26 +7,29 @@
 // NOT COMPLETED(6/15) => TODO: Return the aggregate CPU utilization
 // GO TO JIFFIES AND ACTIVEJIFFIES, IDLEJIFFIES
 float Processor::Utilization() { 
-    std::string line,key,value1,value2;
-    std::string cpu_num, cpu0_num, cpu1_num, cpu2_num, cpu3_num;
+    float totalTime = LinuxParser::Jiffies();
+    float activeTime = LinuxParser::ActiveJiffies() ;
+    float result = 1.0 * (activeTime/totalTime);
+    return result;
+}
 
-    std::ifstream filestream(CPUPath);
-    if (filestream.is_open()){
-        while (std::getline(filestream, line)){
-            std::istringstream linestream(line);
-            linestream >> key >> value1 >> value2;
-            if (key=="cpu")
-                cpu_num = value1;
-            else if (key =="cpu0")
-                cpu0_num = value1;
-            else if (key == "cpu1")
-                cpu1_num =value1;
-            else if (key == "cpu2")
-                cpu2_num = value1;
-            else if (key == "cpu3")
-                cpu3_num = value1;
-        }
-    }
+/* 메모(6/15): 아니 이렇게 계산하라는게 stack overflow에 써있는 내용인데,, 왜 uda community랑 답변이 다른 것 같지?
+1. https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
+2. https://knowledge.udacity.com/questions/156400
 
 
-    return std::stof(cpu_num); }
+PrevIdle = previdle + previowait
+Idle = idle + iowait
+
+PrevNonIdle = prevuser + prevnice + prevsystem + previrq + prevsoftirq + prevsteal
+NonIdle = user + nice + system + irq + softirq + steal
+
+PrevTotal = PrevIdle + PrevNonIdle
+Total = Idle + NonIdle
+
+# differentiate: actual value minus the previous one
+totald = Total - PrevTotal
+idled = Idle - PrevIdle
+
+CPU_Percentage = (totald - idled)/totald
+*/
