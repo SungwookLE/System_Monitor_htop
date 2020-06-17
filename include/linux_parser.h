@@ -7,6 +7,8 @@
 
 namespace LinuxParser {
 // Paths
+
+
 const std::string kProcDirectory{"/proc/"};
 const std::string kCmdlineFilename{"/cmdline"};
 const std::string kCpuinfoFilename{"/cpuinfo"};
@@ -38,13 +40,16 @@ enum CPUStates {
   kSoftIRQ_,
   kSteal_,
   kGuest_,
-  kGuestNice_
+  kGuestNice_,
+  kStarttime_=22
 };
+
 std::vector<std::string> CpuUtilization();
 long Jiffies();
 long ActiveJiffies();
 long ActiveJiffies(int pid);
 long IdleJiffies();
+
 
 // Processes
 std::string Command(int pid);
