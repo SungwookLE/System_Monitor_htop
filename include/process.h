@@ -21,6 +21,7 @@ class Process {
   // TODO: Declare any necessary private members
  private:
  int pid_;
+ std::string Ram_; // DONE(6/18) => added for compare bool <operator>
 };
 
 #endif

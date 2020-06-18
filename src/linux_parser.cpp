@@ -108,18 +108,40 @@ long LinuxParser::UpTime() {
     linestream >> val1 >> val2;
   }
   
-  return std::stoi(val1);  }
+  return std::stol(val1);  }
 
 //  DONE(6/16) => TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { 
   return  LinuxParser::ActiveJiffies() + LinuxParser::IdleJiffies(); }
 
 
-// TODO: Read and return the number of active jiffies for a PID
+// DONE(6/18) => TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::ActiveJiffies(int pid) { 
+  string line, key;
+  float totalTime = 0;
+  float startTimeClkTks = 0.0;
+  std::ifstream filestream(kProcDirectory+to_string(pid)+kStatFilename);
 
-//  DONE(6/16) => TODO: Read and return the number of active jiffies for the system
+  if (filestream.is_open()){
+    std::getline(filestream,line);
+    std::istringstream linestream(line);
+    // get the 14th, 15th, 16th, 17th values
+    for (int i =1 ; i <= kCstime_; i++){
+      linestream >> key;
+      if (i == kUtime_ || i == kStime_ || i == kCutime_ || i == kCstime_ )
+        totalTime += stol(key);
+      else if ( i == kStarttime_)
+        startTimeClkTks = stof(key);
+    }
+  }
+
+  float seconds = LinuxParser::UpTime() - startTimeClkTks / Hertz;
+  float processCpuUtil = (totalTime / Hertz / seconds);
+
+  return processCpuUtil; }
+
+// DONE(6/16) => TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
   std::vector<string> values = LinuxParser::CpuUtilization();
   long val = stof(values[LinuxParser::kUser_]) +
@@ -133,7 +155,7 @@ long LinuxParser::ActiveJiffies() {
   
   return val; }
 
-//  DONE(6/16) => TODO: Read and return the number of idle jiffies for the system
+// DONE(6/16) => TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { 
   vector<string> values = LinuxParser::CpuUtilization() ;
   return (stof(values[kIdle_]) + stof(values[kIOwait_])); 
@@ -212,14 +234,16 @@ string LinuxParser::Command(int pid) {
 string LinuxParser::Ram(int pid) { 
   std::ifstream stream(kProcDirectory+to_string(pid)+kStatusFilename);
   string line, key, value;
+  long val_return;
   if (stream.is_open()){
     while(std::getline(stream,line)){
       std::istringstream linestream(line);
       linestream >> key >> value;
       if (key =="VmSize:")
-        return value;
+        val_return= stol(value)/1000;
     }
   }
+  return to_string(val_return);
 }  
   
  
@@ -272,4 +296,4 @@ long LinuxParser::UpTime(int pid) {
       }
     }
   }
-  return stof(uptime)/Hertz; }
+  return stol(uptime)/Hertz; }

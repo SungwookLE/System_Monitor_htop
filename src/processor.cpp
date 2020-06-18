@@ -4,7 +4,7 @@
 #include <sstream>
 
 
-// NOT COMPLETED(6/16) ??=> TODO: Return the aggregate CPU utilization
+// NOT COMPLETED(6/16) => TODO: Return the aggregate CPU utilization
 // GO TO JIFFIES AND ACTIVEJIFFIES, IDLEJIFFIES
 float Processor::Utilization() { 
     float totalTime = LinuxParser::Jiffies();

@@ -41,6 +41,14 @@ enum CPUStates {
   kSteal_,
   kGuest_,
   kGuestNice_,
+  
+};
+
+enum ProcStates {
+  kUtime_ = 14,
+  kStime_ = 15,
+  kCutime_ = 16,
+  kCstime_ = 17,
   kStarttime_=22
 };
 
