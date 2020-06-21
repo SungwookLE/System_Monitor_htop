@@ -1,22 +1,59 @@
 #include "processor.h"
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
 
-// NOT COMPLETED(6/16) => TODO: Return the aggregate CPU utilization
-// GO TO JIFFIES AND ACTIVEJIFFIES, IDLEJIFFIES
+
+// DONE(6/21) CLEAR => TODO: Return the aggregate CPU utilization
 float Processor::Utilization() { 
-    float totalTime = LinuxParser::Jiffies();
-    float activeTime = LinuxParser::ActiveJiffies() ;
-    float result = 1.0 * (activeTime/totalTime);
-    return result;
+    std::string line, cpu, value;
+    std::vector<std::string> utilization = LinuxParser::CpuUtilization();
+
+    float user = std::stof(utilization[0]);
+    float nice = std::stof(utilization[1]);
+    float system = std::stof(utilization[2]);
+    float idle = std::stof(utilization[3]);
+    float iowait = std::stof(utilization[4]);
+    float irq = std::stof(utilization[5]);
+    float softirq = std::stof(utilization[6]);
+    float steal = std::stof(utilization[7]);
+
+    // Calculation
+    float PrevIdle = previdle + previowait;
+    float Idle = idle + iowait;
+
+    float PrevNonIdle = prevuser + prevnice + prevsystem + previrq + prevsoftirq + prevsteal;
+    float NonIdle = user + nice + system + irq + softirq + steal;
+
+    float PrevTotal = PrevIdle + PrevNonIdle;
+    float Total = Idle + NonIdle;
+
+    float totald = Total - PrevTotal;
+    float idled = Idle - PrevIdle;
+
+    //Final output
+    float output = (totald - idled ) / totald;
+
+    // one step memory variable
+    previdle = idle;
+    previowait = iowait;
+    prevuser = user;
+    prevnice = nice;
+    prevsystem = system;
+    previrq = irq;
+    prevsoftirq = softirq;
+    prevsteal = steal;
+
+    return output;
 }
 
-/* 메모(6/16): 아니 이렇게 계산하라는게 stack overflow에 써있는 내용인데,, 왜 uda community랑 답변이 다른 것 같지?
-1. https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
-2. https://knowledge.udacity.com/questions/156400
 
+
+
+
+/* MEMO(6/21):HOW TO CALCULATE SYSTEM MEMORY UTILIZATION
+1. https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
+2. https://knowledge.udacity.com/questions/153570#160087
 
 PrevIdle = previdle + previowait
 Idle = idle + iowait

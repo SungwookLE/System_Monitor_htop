@@ -15,10 +15,12 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-// TODO: Return the system's CPU
-Processor& System::Cpu() { return cpu_; }
+// DONE(6/21) QUESTION: WHY IS IT NEEDED AS A MEMBER IN THIS CLASS? => TODO: Return the system's CPU
+Processor& System::Cpu() { 
+    static Processor cpu_;
+    return cpu_; }
   
-// DONE(6/18) => NOT COMPLETED (6/17) TODO: Return a container composed of the system's processes
+// DONE(6/18) CLEAR => NOT COMPLETED (6/17) TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
     std::vector<int> pids = LinuxParser::Pids();
     static std::vector<Process> processes_;
@@ -28,6 +30,8 @@ vector<Process>& System::Processes() {
         Process p1(it);
         processes_.emplace_back(p1);
     }
+
+    // QUESTION(6/21): HOW TO WORK WITHOUT COMPARE FUNCTION INSERTION BELOW SORT FUNCTION? 
     std::sort(processes_.begin(), processes_.end());
     
     return processes_; }

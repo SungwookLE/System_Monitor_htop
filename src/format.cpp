@@ -7,7 +7,7 @@
 
 using std::string;
 
-// DONE(6/18) => TODO: Complete this helper function
+// DONE(6/18) CLEAR! => TODO: Complete this helper function
 // INPUT: Long int measuring seconds
 // OUTPUT: HH:MM:SS
 // REMOVE: [[maybe_unused]] once you define the function
