@@ -70,3 +70,6 @@ idled = Idle - PrevIdle
 
 CPU_Percentage = (totald - idled)/totald
 */
+
+
+ 

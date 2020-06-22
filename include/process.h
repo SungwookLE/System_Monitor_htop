@@ -22,8 +22,8 @@ class Process {
  private:
  int pid_;
  std::string Ram_; // DONE(6/18) => added for compare bool <operator>
- float CpuUtil_;
- 
+ float CpuUtil_; // DONE(6/21) => added for compare bool <operator>
+
 };
 
 #endif

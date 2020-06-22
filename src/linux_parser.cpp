@@ -70,32 +70,36 @@ vector<int> LinuxParser::Pids() {
 }
 
 // DONE(6/14) CLEAR => TODO: Read and return the system memory utilization
+// (6/22) Feedback DONE
 float LinuxParser::MemoryUtilization() { 
   std::ifstream stream(kProcDirectory+kMeminfoFilename);
   string line, key,res_line;
   string value_memtotal;
-  string value_memfree;
+  string value_memfree,value_buffers;
 
   if (stream.is_open()){
     while (std::getline(stream, line)){
-      std::replace(line.begin(), line.end(), ' ', '_');
+      
       std::replace(line.begin(), line.end(), ':', ' ');
       std::replace(line.begin(), line.end(), 'k', ' ');
-      std::replace(line.begin(), line.end(), 'B', ' ');
       std::istringstream linestream(line);
+        
       linestream >> key >> res_line;
       if (key == "MemTotal") {
-          value_memtotal=res_line;
-          std::replace(value_memtotal.begin(), value_memtotal.end(), '_', ' ');
-        }
+        value_memtotal=res_line;
+      }
       else if (key == "MemFree"){
-          value_memfree=res_line;
-          std::replace(value_memfree.begin(), value_memfree.end(), '_', ' ');
+        value_memfree=res_line;
+      }
+      else if (key == "Buffers"){
+        value_buffers= res_line;
       }
     }
   }
-
-  return stof(value_memtotal) - stof(value_memfree); }
+  return 1-(
+    stof(value_memfree)/
+    (stof(value_memtotal)-stof(value_buffers)));
+}
 
 // DONE(6/15) CLEAR => TODO: Read and return the system uptime
 long LinuxParser::UpTime() { 
@@ -247,32 +251,42 @@ string LinuxParser::Ram(int pid) {
   
  
 // DONE(6/16) CLEAR => TODO: Read and return the user ID associated with a process
+// (6/22) Feedback DONE
 string LinuxParser::Uid(int pid) { 
   std::ifstream stream(kProcDirectory+to_string(pid)+kStatusFilename);
   std::string line, key, uid;
+  std::string val_return;
   if (stream.is_open()){
     while (std::getline(stream, line)){
       std::istringstream linestream(line);
       linestream >> key >> uid;
       if (key == "Uid:")
-        return string(uid); 
+        val_return= string(uid); 
     }
   }
+  return val_return;
 }
 
 // DONE(6/16) CLEAR => TODO: Read and return the user associated with a process
+// (6/22) Feedback DONE
 string LinuxParser::User(int pid) { 
   std::ifstream stream(kPasswordPath);
   std::string line, key, user, res;
+  std::string val_return;
+  std::string uid = LinuxParser::Uid(pid);
+
+
   if (stream.is_open()){
     while (std::getline(stream,line)){
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
       linestream >> user >> res >> key;
-      if (key==to_string(pid))
-        return user;
+      if (key==uid) {
+        val_return= user;
+      }
     }
   }
+  return val_return;
 }
 
 // DONE(6/17) CLEAR => TODO: Read and return the uptime of a process

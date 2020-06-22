@@ -7,6 +7,8 @@
 
 int main() {
   System system;
+
+  
   NCursesDisplay::Display(system);
 
   return 0;  
